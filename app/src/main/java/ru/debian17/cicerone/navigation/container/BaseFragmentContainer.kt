@@ -67,8 +67,8 @@ abstract class BaseFragmentContainer : androidx.fragment.app.Fragment(), BackBut
         return SupportAppNavigator(requireActivity(), childFragmentManager, containerId)
     }
 
-    protected open fun getContainerName(): String {
-        return javaClass.canonicalName!!
+    fun getContainerName(): String {
+        return javaClass.canonicalName ?: "Unknown container name"
     }
 
     private fun getCicerone(): Cicerone<Router> {
