@@ -1,41 +1,35 @@
 package ru.debian17.cicerone.ui
 
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import ru.debian17.cicerone.App
 import ru.debian17.cicerone.R
 import ru.debian17.cicerone.navigation.BackButtonListener
-import ru.debian17.cicerone.navigation.MainNavigator
+import ru.debian17.cicerone.navigation.BottomTabNavigator
 import ru.debian17.cicerone.navigation.RouterProvider
-import ru.debian17.cicerone.navigation.container.MedOrgsContainer
-import ru.debian17.cicerone.navigation.container.PatientsContainer
-import ru.debian17.cicerone.ui.medorg.MedOrgsFragment
-import ru.debian17.cicerone.ui.patient.PatientsFragment
-import ru.terrakok.cicerone.Navigator
-import ru.terrakok.cicerone.NavigatorHolder
+import ru.debian17.cicerone.navigation.screen.FragmentScreen
+import ru.debian17.cicerone.navigation.container.MedOrgsFragmentContainer
+import ru.debian17.cicerone.navigation.container.PatientsFragmentContainer
+import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), RouterProvider {
 
-    private lateinit var mainNavigator: MainNavigator
+    private val cicerone = Cicerone.create()
+    private lateinit var bottomTabNavigator: BottomTabNavigator
 
-    @Inject
-    override lateinit var router: Router
-
-    @Inject
-    lateinit var navigatorHolder: NavigatorHolder
+    override val router: Router
+        get() = cicerone.router
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-                router.replaceScreen(MedOrgsContainer.TAG)
+                router.replaceScreen(FragmentScreen(MedOrgsFragmentContainer.newInstance()))
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
-                router.replaceScreen(PatientsContainer.TAG)
+                router.replaceScreen(FragmentScreen(PatientsFragmentContainer.newInstance()))
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
@@ -47,29 +41,28 @@ class MainActivity : AppCompatActivity(), RouterProvider {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        App.appComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainNavigator = MainNavigator(this)
-        mainNavigator.initContainers()
+        bottomTabNavigator = BottomTabNavigator(this, R.id.main_container)
+        bottomTabNavigator.initContainers()
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         if (savedInstanceState == null) {
-            router.replaceScreen(MedOrgsContainer.TAG)
+            router.replaceScreen(FragmentScreen(MedOrgsFragmentContainer.newInstance()))
         }
 
     }
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        navigatorHolder.setNavigator(mainNavigator)
+        cicerone.navigatorHolder.setNavigator(bottomTabNavigator)
     }
 
     override fun onPause() {
         super.onPause()
-        navigatorHolder.removeNavigator()
+        cicerone.navigatorHolder.removeNavigator()
     }
 
     override fun onBackPressed() {

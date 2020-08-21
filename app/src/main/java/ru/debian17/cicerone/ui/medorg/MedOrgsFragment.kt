@@ -2,7 +2,6 @@ package ru.debian17.cicerone.ui.medorg
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,16 +10,15 @@ import kotlinx.android.synthetic.main.fragment_med_orgs.*
 import ru.debian17.cicerone.R
 import ru.debian17.cicerone.navigation.BackButtonListener
 import ru.debian17.cicerone.navigation.RouterProvider
+import ru.debian17.cicerone.navigation.screen.FragmentScreen
 
-class MedOrgsFragment : Fragment(), BackButtonListener {
+class MedOrgsFragment : androidx.fragment.app.Fragment(), BackButtonListener {
 
     companion object {
-        const val TAG = "MedOrgsFragmentTag"
         fun newInstance(): MedOrgsFragment {
             return MedOrgsFragment()
         }
     }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -31,7 +29,7 @@ class MedOrgsFragment : Fragment(), BackButtonListener {
         super.onViewCreated(view, savedInstanceState)
 
         btnMedOrgInfo.setOnClickListener {
-            (parentFragment as RouterProvider).router.navigateTo(MedOrgInfoFragment.TAG)
+            (parentFragment as RouterProvider).router.navigateTo(FragmentScreen(MedOrgInfoFragment.newInstance()))
         }
     }
 

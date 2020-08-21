@@ -2,7 +2,7 @@ package ru.debian17.cicerone.ui.patient
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +11,9 @@ import ru.debian17.cicerone.R
 import ru.debian17.cicerone.navigation.BackButtonListener
 import ru.debian17.cicerone.navigation.RouterProvider
 
-class PatientInfoFragment : Fragment(), BackButtonListener {
+class PatientInfoFragment : androidx.fragment.app.Fragment(), BackButtonListener {
 
     companion object {
-        const val TAG = "PatientInfoFragmentTag"
         fun newInstance(): PatientInfoFragment {
             return PatientInfoFragment()
         }

@@ -2,7 +2,6 @@ package ru.debian17.cicerone.ui.patient
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +9,11 @@ import kotlinx.android.synthetic.main.fragment_patients.*
 
 import ru.debian17.cicerone.R
 import ru.debian17.cicerone.navigation.RouterProvider
+import ru.debian17.cicerone.navigation.screen.FragmentScreen
 
-class PatientsFragment : Fragment() {
+class PatientsFragment : androidx.fragment.app.Fragment() {
 
     companion object {
-        const val TAG = "PatientsFragmentTag"
         fun newInstance(): PatientsFragment {
             return PatientsFragment()
         }
@@ -29,7 +28,7 @@ class PatientsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         btnPatientInfo.setOnClickListener {
-            (parentFragment as RouterProvider).router.navigateTo(PatientInfoFragment.TAG)
+            (parentFragment as RouterProvider).router.navigateTo(FragmentScreen(PatientInfoFragment.newInstance()))
         }
     }
 
