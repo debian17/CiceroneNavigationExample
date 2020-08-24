@@ -36,6 +36,7 @@ dependencies {
 
     //Moxy
     implementation "com.arello-mobile:moxy:$moxy"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "com.arello-mobile:moxy-compiler:$moxy"
     implementation "com.arello-mobile:moxy-android:$moxy"
     implementation "com.arello-mobile:moxy-app-compat:$moxy"

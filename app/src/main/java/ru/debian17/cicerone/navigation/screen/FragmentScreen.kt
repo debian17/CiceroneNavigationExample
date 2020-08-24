@@ -9,8 +9,4 @@ class FragmentScreen(private val fragment: Fragment) : SupportAppScreen() {
         return fragment
     }
 
-    override fun getScreenKey(): String {
-        return fragment.javaClass.canonicalName ?: "Unknown fragment name"
-    }
-
 }

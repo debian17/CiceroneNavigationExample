@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_second_tab_first.*
-
 import ru.debian17.cicerone.R
 import ru.debian17.cicerone.navigation.RouterProvider
 import ru.debian17.cicerone.navigation.screen.FragmentScreen
+import ru.debian17.cicerone.ui.BaseFragment
 
-class SecondTabFirstFragment : androidx.fragment.app.Fragment() {
+class SecondTabFirstFragment : BaseFragment() {
 
     companion object {
         fun newInstance(): SecondTabFirstFragment {

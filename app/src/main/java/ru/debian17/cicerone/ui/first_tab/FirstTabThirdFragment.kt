@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_first_tab_third.*
 
 import ru.debian17.cicerone.R
-import ru.debian17.cicerone.navigation.BackButtonListener
 import ru.debian17.cicerone.navigation.RouterProvider
 import ru.debian17.cicerone.navigation.screen.ActivityScreen
+import ru.debian17.cicerone.ui.BaseFragment
 import ru.debian17.cicerone.ui.TestActivity
 
-class FirstTabThirdFragment : androidx.fragment.app.Fragment(), BackButtonListener {
+class FirstTabThirdFragment : BaseFragment() {
 
     companion object {
         fun newInstance(): FirstTabThirdFragment {
@@ -33,11 +33,6 @@ class FirstTabThirdFragment : androidx.fragment.app.Fragment(), BackButtonListen
             val screen = ActivityScreen(TestActivity.getStartIntent(requireContext()))
             (parentFragment as RouterProvider).router.navigateTo(screen)
         }
-    }
-
-    override fun onBackPressed(): Boolean {
-        (parentFragment as RouterProvider).router.exit()
-        return true
     }
 
 }
