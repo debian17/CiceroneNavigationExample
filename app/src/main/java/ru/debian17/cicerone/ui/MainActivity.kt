@@ -5,31 +5,33 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.debian17.cicerone.R
+import ru.debian17.cicerone.navigation.AppRouter
 import ru.debian17.cicerone.navigation.BackButtonListener
-import ru.debian17.cicerone.navigation.BottomTabNavigator
+import ru.debian17.cicerone.navigation.AppNavigator
 import ru.debian17.cicerone.navigation.RouterProvider
 import ru.debian17.cicerone.navigation.screen.FragmentScreen
 import ru.debian17.cicerone.navigation.container.FirstTabContainer
 import ru.debian17.cicerone.navigation.container.SecondTabContainer
 import ru.terrakok.cicerone.Cicerone
-import ru.terrakok.cicerone.Router
 
 class MainActivity : AppCompatActivity(), RouterProvider {
 
-    private val cicerone = Cicerone.create()
-    private lateinit var bottomTabNavigator: BottomTabNavigator
+    private val cicerone = Cicerone.create(AppRouter())
+    private lateinit var appNavigator: AppNavigator
 
-    override val router: Router
+    override val router: AppRouter
         get() = cicerone.router
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_first -> {
-                router.replaceScreen(FragmentScreen(FirstTabContainer.newInstance()))
+                val screen = FragmentScreen(FirstTabContainer.newInstance())
+                router.replaceTab(screen)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_second -> {
-                router.replaceScreen(FragmentScreen(SecondTabContainer.newInstance()))
+                val screen = FragmentScreen(SecondTabContainer.newInstance())
+                router.replaceTab(screen)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -40,20 +42,21 @@ class MainActivity : AppCompatActivity(), RouterProvider {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        bottomTabNavigator = BottomTabNavigator(this, R.id.main_container)
-        bottomTabNavigator.initContainers()
+        appNavigator = AppNavigator(this, R.id.main_container)
+        appNavigator.initContainers()
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         if (savedInstanceState == null) {
-            router.replaceScreen(FragmentScreen(FirstTabContainer.newInstance()))
+            val screen = FragmentScreen(FirstTabContainer.newInstance())
+            router.replaceTab(screen)
         }
 
     }
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        cicerone.navigatorHolder.setNavigator(bottomTabNavigator)
+        cicerone.navigatorHolder.setNavigator(appNavigator)
     }
 
     override fun onPause() {

@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ru.debian17.cicerone.R
-import ru.debian17.cicerone.navigation.BackButtonListener
-import ru.debian17.cicerone.navigation.LocalCiceroneHolder
-import ru.debian17.cicerone.navigation.RouterProvider
+import ru.debian17.cicerone.navigation.*
 import ru.debian17.cicerone.navigation.screen.FragmentScreen
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Navigator
@@ -19,9 +17,9 @@ abstract class BaseFragmentContainer : androidx.fragment.app.Fragment(), BackBut
     protected abstract fun getInitialFragmentScreen(params: Bundle?): FragmentScreen
 
     private lateinit var navigator: Navigator
-    protected val containerId = R.id.base_container
+    private val containerId = R.id.base_container
 
-    override val router: Router
+    override val router: AppRouter
         get() = getCicerone().router
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,14 +62,14 @@ abstract class BaseFragmentContainer : androidx.fragment.app.Fragment(), BackBut
     }
 
     protected open fun initNavigator(): Navigator {
-        return SupportAppNavigator(requireActivity(), childFragmentManager, containerId)
+        return AppNavigator(requireActivity(), childFragmentManager, containerId)
     }
 
     fun getContainerName(): String {
         return javaClass.canonicalName ?: "Unknown container name"
     }
 
-    private fun getCicerone(): Cicerone<Router> {
+    private fun getCicerone(): Cicerone<AppRouter> {
         val containerName = getContainerName()
         return LocalCiceroneHolder.getCicerone(containerName)
     }
