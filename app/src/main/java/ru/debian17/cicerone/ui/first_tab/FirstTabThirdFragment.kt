@@ -1,35 +1,37 @@
-package ru.debian17.cicerone.ui.medorg
+package ru.debian17.cicerone.ui.first_tab
 
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_med_orgs.*
+import kotlinx.android.synthetic.main.fragment_first_tab_third.*
 
 import ru.debian17.cicerone.R
 import ru.debian17.cicerone.navigation.BackButtonListener
 import ru.debian17.cicerone.navigation.RouterProvider
-import ru.debian17.cicerone.navigation.screen.FragmentScreen
+import ru.debian17.cicerone.navigation.screen.ActivityScreen
+import ru.debian17.cicerone.ui.TestActivity
 
-class MedOrgsFragment : androidx.fragment.app.Fragment(), BackButtonListener {
+class FirstTabThirdFragment : androidx.fragment.app.Fragment(), BackButtonListener {
 
     companion object {
-        fun newInstance(): MedOrgsFragment {
-            return MedOrgsFragment()
+        fun newInstance(): FirstTabThirdFragment {
+            return FirstTabThirdFragment()
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_med_orgs, container, false)
+        return inflater.inflate(R.layout.fragment_first_tab_third, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnMedOrgInfo.setOnClickListener {
-            (parentFragment as RouterProvider).router.navigateTo(FragmentScreen(MedOrgInfoFragment.newInstance()))
+        btnStartActivity.setOnClickListener {
+            val screen = ActivityScreen(TestActivity.getStartIntent(requireContext()))
+            (parentFragment as RouterProvider).router.navigateTo(screen)
         }
     }
 

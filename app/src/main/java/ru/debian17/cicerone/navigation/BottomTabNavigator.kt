@@ -3,39 +3,40 @@ package ru.debian17.cicerone.navigation
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
 import ru.debian17.cicerone.navigation.container.BaseFragmentContainer
-import ru.debian17.cicerone.navigation.container.MedOrgsFragmentContainer
-import ru.debian17.cicerone.navigation.container.PatientsFragmentContainer
+import ru.debian17.cicerone.navigation.container.FirstTabContainer
+import ru.debian17.cicerone.navigation.container.SecondTabContainer
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.commands.Command
 import ru.terrakok.cicerone.commands.Replace
 import java.lang.RuntimeException
+import java.util.*
 
 class BottomTabNavigator(
         activity: FragmentActivity,
         @IdRes containerId: Int
 ) : SupportAppNavigator(activity, containerId) {
 
-    private val containers = ArrayList<BaseFragmentContainer>()
+    private val containers = LinkedList<BaseFragmentContainer>()
 
     fun initContainers() {
         val fm = fragmentManager ?: return
-        val medOrgsContainer = fm.findFragmentByTag(MedOrgsFragmentContainer.TAG) as? MedOrgsFragmentContainer
-                ?: MedOrgsFragmentContainer.newInstance().apply {
+        val firstTabContainer = fm.findFragmentByTag(FirstTabContainer.TAG) as? FirstTabContainer
+                ?: FirstTabContainer.newInstance().apply {
                     fm.beginTransaction()
-                            .replace(containerId, this, MedOrgsFragmentContainer.TAG)
+                            .replace(containerId, this, FirstTabContainer.TAG)
                             .detach(this)
                             .commitNow()
                 }
 
-        val patientContainer = fm.findFragmentByTag(PatientsFragmentContainer.TAG) as? PatientsFragmentContainer
-                ?: PatientsFragmentContainer.newInstance().apply {
+        val secondTabContainer = fm.findFragmentByTag(SecondTabContainer.TAG) as? SecondTabContainer
+                ?: SecondTabContainer.newInstance().apply {
                     fm.beginTransaction()
-                            .replace(containerId, this, PatientsFragmentContainer.TAG)
+                            .replace(containerId, this, SecondTabContainer.TAG)
                             .detach(this)
                             .commitNow()
                 }
-        containers.add(medOrgsContainer)
-        containers.add(patientContainer)
+        containers.add(firstTabContainer)
+        containers.add(secondTabContainer)
     }
 
     override fun applyCommand(command: Command) {

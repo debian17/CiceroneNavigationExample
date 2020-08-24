@@ -3,18 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.medorg.SomeInfoFragment">
+    tools:context=".ui.second_tab.SecondTabFirstFragment">
 
-    <EditText
-        android:id="@+id/et3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Second tab First fragment"
+        android:textSize="20sp" />
 
     <Button
-        android:id="@+id/btnStartActivity"
+        android:id="@+id/btnSecond"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="activity" />
+        android:text="second" />
 
 </FrameLayout>

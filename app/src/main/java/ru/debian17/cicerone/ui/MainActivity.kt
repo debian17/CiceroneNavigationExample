@@ -9,8 +9,8 @@ import ru.debian17.cicerone.navigation.BackButtonListener
 import ru.debian17.cicerone.navigation.BottomTabNavigator
 import ru.debian17.cicerone.navigation.RouterProvider
 import ru.debian17.cicerone.navigation.screen.FragmentScreen
-import ru.debian17.cicerone.navigation.container.MedOrgsFragmentContainer
-import ru.debian17.cicerone.navigation.container.PatientsFragmentContainer
+import ru.debian17.cicerone.navigation.container.FirstTabContainer
+import ru.debian17.cicerone.navigation.container.SecondTabContainer
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
 
@@ -24,16 +24,12 @@ class MainActivity : AppCompatActivity(), RouterProvider {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-            R.id.navigation_home -> {
-                router.replaceScreen(FragmentScreen(MedOrgsFragmentContainer.newInstance()))
+            R.id.navigation_first -> {
+                router.replaceScreen(FragmentScreen(FirstTabContainer.newInstance()))
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
-                router.replaceScreen(FragmentScreen(PatientsFragmentContainer.newInstance()))
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_notifications -> {
-
+            R.id.navigation_second -> {
+                router.replaceScreen(FragmentScreen(SecondTabContainer.newInstance()))
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -50,7 +46,7 @@ class MainActivity : AppCompatActivity(), RouterProvider {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         if (savedInstanceState == null) {
-            router.replaceScreen(FragmentScreen(MedOrgsFragmentContainer.newInstance()))
+            router.replaceScreen(FragmentScreen(FirstTabContainer.newInstance()))
         }
 
     }
