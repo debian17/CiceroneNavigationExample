@@ -10,6 +10,7 @@ import ru.debian17.cicerone.R
 import ru.debian17.cicerone.navigation.RouterProvider
 import ru.debian17.cicerone.navigation.screen.FragmentScreen
 import ru.debian17.cicerone.ui.BaseFragment
+import ru.debian17.cicerone.ui.MainActivity
 
 class SecondTabFirstFragment : BaseFragment() {
 
@@ -29,8 +30,13 @@ class SecondTabFirstFragment : BaseFragment() {
 
         btnSecond.setOnClickListener {
             val screen = FragmentScreen(SecondTabSecondFragment.newInstance())
-            (parentFragment as RouterProvider).router.navigateTo(screen)
+            (activity as MainActivity).globalNavigator.getCurrentTab().navigateTo(screen)
         }
+    }
+
+    override fun onBackPressed(): Boolean {
+        (activity as MainActivity).globalNavigator.getCurrentTab().exit()
+        return true
     }
 
 }

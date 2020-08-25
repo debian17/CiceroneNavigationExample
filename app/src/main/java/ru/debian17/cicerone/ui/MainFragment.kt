@@ -14,7 +14,7 @@ import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
-class MainFragment : BaseFragment(), RouterProvider {
+class MainFragment : BaseFragment() {
 
     companion object {
         fun newInstance() = MainFragment()
@@ -23,12 +23,6 @@ class MainFragment : BaseFragment(), RouterProvider {
         const val TAB_SECOND = "TAB_SECOND"
 
     }
-
-    private val cicerone = Cicerone.create()
-    override val router: Router
-        get() = cicerone.router
-
-    private lateinit var tabNavigator: SupportAppNavigator
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -46,7 +40,6 @@ class MainFragment : BaseFragment(), RouterProvider {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        tabNavigator = SupportAppNavigator(requireActivity(), childFragmentManager, R.id.flMainFragment)
 
         if (savedInstanceState == null) {
             selectTab(TAB_FIRST)
@@ -63,47 +56,18 @@ class MainFragment : BaseFragment(), RouterProvider {
         bnvTabs.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
-    override fun onResume() {
-        super.onResume()
-        cicerone.navigatorHolder.setNavigator(tabNavigator)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        cicerone.navigatorHolder.removeNavigator()
-    }
-
     override fun onBackPressed(): Boolean {
         val fragment = childFragmentManager.findFragmentById(R.id.flMainFragment)
         if ((fragment != null && fragment is BackButtonListener && fragment.onBackPressed())) {
             return true
         } else {
-            router.exit()
+            //router.exit()
             return true
         }
     }
 
     private fun selectTab(tabName: String) {
-        val currentFragment = childFragmentManager.fragments.firstOrNull { it.isAdded }
-        val newFragment = childFragmentManager.findFragmentByTag(tabName)
-
-        if (currentFragment != null && newFragment != null && currentFragment == newFragment) {
-            return
-        }
-
-        val transaction = childFragmentManager.beginTransaction()
-
-        if (newFragment == null) {
-            transaction.add(R.id.flMainFragment, TabFragmentContainer.newInstance(tabName), tabName)
-        } else {
-            transaction.attach(newFragment)
-        }
-
-        if (currentFragment != null) {
-            transaction.detach(currentFragment)
-        }
-
-        transaction.commitNow()
+        (activity as MainActivity).globalNavigator.selectTab(tabName, childFragmentManager)
     }
 
 }

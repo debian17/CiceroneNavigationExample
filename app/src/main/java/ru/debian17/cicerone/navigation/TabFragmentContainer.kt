@@ -8,15 +8,12 @@ import androidx.fragment.app.Fragment
 import ru.debian17.cicerone.R
 import ru.debian17.cicerone.navigation.screen.FragmentScreen
 import ru.debian17.cicerone.ui.BaseFragment
+import ru.debian17.cicerone.ui.MainActivity
 import ru.debian17.cicerone.ui.MainFragment
 import ru.debian17.cicerone.ui.first_tab.FirstTabFirstFragment
 import ru.debian17.cicerone.ui.second_tab.SecondTabFirstFragment
-import ru.terrakok.cicerone.Cicerone
-import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.android.support.SupportAppNavigator
-import java.lang.RuntimeException
 
-class TabFragmentContainer : BaseFragment(), RouterProvider {
+class TabFragmentContainer : BaseFragment() {
 
     companion object {
         private const val TAB_NAME = "TAB_NAME"
@@ -29,6 +26,8 @@ class TabFragmentContainer : BaseFragment(), RouterProvider {
         }
     }
 
+    private lateinit var globalNavigator: GlobalNavigator
+
     private fun getInitialFragmentScreen(tabName: String): FragmentScreen {
         val fragment: Fragment = when (tabName) {
             MainFragment.TAB_FIRST -> FirstTabFirstFragment.newInstance()
@@ -38,11 +37,7 @@ class TabFragmentContainer : BaseFragment(), RouterProvider {
         return FragmentScreen(fragment)
     }
 
-    private lateinit var navigator: SupportAppNavigator
     private val containerId = R.id.base_container
-
-    override val router: Router
-        get() = getCicerone().router
 
     private val tabName: String by lazy {
         arguments!!.getString(TAB_NAME)
@@ -50,9 +45,8 @@ class TabFragmentContainer : BaseFragment(), RouterProvider {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (!this::navigator.isInitialized) {
-            navigator = SupportAppNavigator(requireActivity(), childFragmentManager, containerId)
-        }
+        globalNavigator = (activity as MainActivity).globalNavigator
+        globalNavigator.initTab(tabName, childFragmentManager, containerId)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,18 +58,18 @@ class TabFragmentContainer : BaseFragment(), RouterProvider {
 
         if (childFragmentManager.findFragmentById(containerId) == null) {
             val initialScreen = getInitialFragmentScreen(tabName)
-            router.newRootScreen(initialScreen)
+            globalNavigator.getCurrentTab().newRootScreen(initialScreen)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        getCicerone().navigatorHolder.setNavigator(navigator)
+        globalNavigator.setTabNavigator(tabName)
     }
 
     override fun onPause() {
         super.onPause()
-        getCicerone().navigatorHolder.removeNavigator()
+        globalNavigator.removeTabNavigator(tabName)
     }
 
     override fun onBackPressed(): Boolean {
@@ -84,13 +78,9 @@ class TabFragmentContainer : BaseFragment(), RouterProvider {
             return true
         } else {
             val act = (activity as? RouterProvider) ?: return false
-            act.router.exit()
+            act.router?.exit()
             return true
         }
-    }
-
-    private fun getCicerone(): Cicerone<Router> {
-        return LocalCiceroneHolder.getCicerone(tabName)
     }
 
 }

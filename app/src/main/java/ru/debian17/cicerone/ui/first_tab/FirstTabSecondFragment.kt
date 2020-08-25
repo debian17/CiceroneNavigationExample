@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_first_tab_second.*
 import ru.debian17.cicerone.R
-import ru.debian17.cicerone.navigation.RouterProvider
 import ru.debian17.cicerone.navigation.screen.FragmentScreen
 import ru.debian17.cicerone.ui.BaseFragment
+import ru.debian17.cicerone.ui.MainActivity
 
 class FirstTabSecondFragment : BaseFragment() {
 
@@ -29,12 +29,12 @@ class FirstTabSecondFragment : BaseFragment() {
 
         btnThird.setOnClickListener {
             val screen = FragmentScreen(FirstTabThirdFragment.newInstance())
-            (parentFragment as RouterProvider).router.navigateTo(screen)
+            (activity as MainActivity).globalNavigator.getCurrentTab().navigateTo(screen)
         }
     }
 
     override fun onBackPressed(): Boolean {
-        (parentFragment as RouterProvider).router.exit()
+        (activity as MainActivity).globalNavigator.getCurrentTab().exit()
         return true
     }
 

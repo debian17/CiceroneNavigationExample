@@ -4,38 +4,32 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.debian17.cicerone.R
 import ru.debian17.cicerone.navigation.BackButtonListener
-import ru.debian17.cicerone.navigation.RouterProvider
+import ru.debian17.cicerone.navigation.GlobalNavigator
 import ru.debian17.cicerone.navigation.screen.FragmentScreen
-import ru.terrakok.cicerone.Cicerone
-import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
-class MainActivity : AppCompatActivity(), RouterProvider {
+class MainActivity : AppCompatActivity() {
 
-    private val cicerone = Cicerone.create()
-    private lateinit var appNavigator: SupportAppNavigator
-
-    override val router: Router
-        get() = cicerone.router
+    val globalNavigator = GlobalNavigator(this, R.id.flMain)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        appNavigator = SupportAppNavigator(this, R.id.flMain)
+
         if (savedInstanceState == null) {
             val screen = FragmentScreen(MainFragment.newInstance())
-            router.replaceScreen(screen)
+            globalNavigator.fullScreen.newRootScreen(screen)
         }
+
     }
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        cicerone.navigatorHolder.setNavigator(appNavigator)
+        globalNavigator.setMainNavigator()
     }
 
     override fun onPause() {
         super.onPause()
-        cicerone.navigatorHolder.removeNavigator()
+        globalNavigator.removeMainNavigator()
     }
 
     override fun onBackPressed() {
@@ -43,7 +37,7 @@ class MainActivity : AppCompatActivity(), RouterProvider {
         if ((fragment != null && fragment is BackButtonListener && fragment.onBackPressed())) {
             return
         } else {
-            router.exit()
+            globalNavigator.fullScreen.exit()
         }
     }
 
